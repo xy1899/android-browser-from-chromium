@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Android-browser-from-chromium by xy1899</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-dark.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+        <h1>Android-browser-from-chromium</h1>
+        <p>chromium for android 下载和编译</p>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/xy1899/android-browser-from-chromium" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/xy1899/android-browser-from-chromium/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/xy1899/android-browser-from-chromium/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <p>最近有做基于chromium的android浏览器的需求，首先得下载chromium for android源码。
+   一、lantern翻墙
+   1、基于现在国内网络环境，为了访问国外的一些网站，需翻墙，现在用的lantern(Win,Mac和linux都有版本)，可在其官网下载对应版本（<a href="https://www.getlantern.org/%EF%BC%89%EF%BC%8C%E5%AE%89%E8%A3%85%E5%A5%BD%E5%90%8E%E8%BF%90%E8%A1%8C%E4%BC%9A%E5%9C%A8%E6%B5%8F%E8%A7%88%E5%99%A8%E5%BC%B9%E5%87%BA%E4%B8%80%E4%B8%AA%E9%A1%B5%E9%9D%A2%EF%BC%8C%E6%AD%A4%E6%97%B6%E5%BA%94%E8%AF%A5%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E8%BF%9B%E5%85%A5google%E4%BA%86%EF%BC%88%E6%8D%AE%E8%AF%B4%E9%9C%80%E8%A6%81%E6%9C%89chrome%E5%86%85%E6%A0%B8%E7%9A%84%E6%B5%8F%E8%A7%88%E5%99%A8%E6%89%8D%E8%83%BD%E9%A1%BA%E5%88%A9%E8%B6%8A%E7%8B%B1%EF%BC%8C%E6%B2%A1%E6%9C%89%E5%B0%9D%E8%AF%95%E6%8A%8A%E6%89%80%E6%9C%89chrome%E5%86%85%E6%A0%B8%E7%9A%84%E6%B5%8F%E8%A7%88%E5%99%A8%E9%83%BD%E5%88%A0%E9%99%A4%E8%BF%87%EF%BC%89">https://www.getlantern.org/），安装好后运行会在浏览器弹出一个页面，此时应该可以直接进入google了（据说需要有chrome内核的浏览器才能顺利越狱，没有尝试把所有chrome内核的浏览器都删除过）</a>
+   2、Ubuntu下配置蓝灯代理：
+      终端输入命令：gedit ~/.bashrc 
+      最后加入两行：
+      export http_proxy=127.0.0.1:8787
+      export https_proxy=127.0.0.1:8787
+在源码下载过程中有中断情况，加入代理配置会好些，具体原因未深究。
+    二、下载配置Depot tools
+    在终端输入命令：
+    git clone <a href="https://chromium.googlesource.com/chromium/tools/depot_tools.git">https://chromium.googlesource.com/chromium/tools/depot_tools.git</a>
+会下载Depot tools到你的用户名目录下，接着将Depot tools文件夹路径添加到环境变量中。
+    三、下载源码
+    1、创建一个放源码的目录，并在终端定位到次目录，然后执行命令：fetch android，会生成一个.glient文件和一个Src文件夹，官网中说接下来要执行$ cd src &amp;&amp; ./build/install-build-deps.sh命令，应该是要安装一些编译是依赖的文件
+    2、接着执行命令gclient sync，此过程可以要很久，过程中还遇到了中断情况，应该是蓝灯没有在环境变量中配置，注意需在.gclient所在目录下执行该命令。
+    四、编译源码
+    1.配置环境变量,一般都安装好了，可不执行
+      gedit /etc/profile
+      在文件最后加入
+    PATH=$PATH:~/tools/depot_tools:~/code/chromium/src/third_party/android_tools/sdk/            build_tools/23.0.1:~/code/chromium/src/third_party/android_tools/sdk/platform-tools
+    (路径需替换为实际路径)
+    2.有两种工程生成方式：GYP与GN，这里使用GN构建工程
+    gn args out/Default
+    会打开一个vi，在该文件中设置编译选项如下（可参考<a href="https://www.chromium.org/developers/gn-build-configuration%EF%BC%89">https://www.chromium.org/developers/gn-build-configuration）</a>
+    target_os = "android"
+    target_cpu = "arm"  # (default)
+    s_debug = true  # (default)</p>
+
+<pre><code># Other args you may want to set:
+is_component_build = true
+is_clang = true
+symbol_level = 1  # Faster build with fewer symbols. -g1 rather than -g2
+enable_incremental_javac = true  # Much faster; experimental
+保存退出后会自动开始生成工程
+
+3.安装编译工具链
+./build/install-build-deps-android.sh 
+4.编译
+需在源码目录下执行命令：
+. build/android/envsetup.sh （注意前面有个点，不能漏）
+CHROMIUM_OUTPUT_DIR=$gndir build/android/adb_install_apk.py $gndir/apks/ChromePublic.apk
+
+ninja -C out/Default chrome_public_apk
+5、编译所遇问题：
+</code></pre>
+
+<p>(1)以上流程都是下载的最新代码，在编译最后会提示缺少文件之类的错误，可以手动添加空文件到提示目录，或者还原代码到特定的稳定版本,我采用添加文件的方式编译出来的apk安装到手机后，打开直播吧网页，网页崩溃了，不知道是不是这个原因导致，如想回退到特定版本可执行类似如下命令：
+    gclient sync --nohooks -r 7a9553764fb4e76ef63305d51e9e7a2e60bc24bb
+后面很长的字符串是哈希码。
+   (2)如果遇到报错：
+Warning: library class android.webkit.WebView depends on program class android.net.http.SslCertificate
+Warning: library class android.webkit.WebView depends on program class android.net.http.SslCertificate
+Warning: there were 2 instances of library classes depending on program classes.
+         You must avoid such dependencies, since the program classes will
+         be processed, while the library classes will remain unchanged.
+         (<a href="http://proguard.sourceforge.net/manual/troubleshooting.html#dependency">http://proguard.sourceforge.net/manual/troubleshooting.html#dependency</a>)
+Error: Please correct the above warnings first.</p>
+
+<p>解决方法：文本编辑器打开src/out/Default/gen/chrome/android/chrome_public_apk/chrome_public_apk.resources.proguard.txt,在最后加入
+-keep public class android.net.http.SslError
+-keep public class android.webkit.WebViewClient
+-dontwarn android.webkit.WebView
+-dontwarn android.net.http.SslError
+-dontwarn android.webkit.WebViewClient</p>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/xy1899">xy1899</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
